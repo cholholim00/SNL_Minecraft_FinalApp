@@ -1,0 +1,10 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+
+# logs
+npm-debug.log*
+
