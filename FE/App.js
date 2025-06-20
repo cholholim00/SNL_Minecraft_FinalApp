@@ -21,7 +21,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'AI 밸런스 생성기' }} />
-        <Stack.Screen name="Game" component={GameScreen} options={{ title: '너라면?' }} />
+        <Stack.Screen name="Game" component={GameScreen} options={{ title: '나 🍜?' }} />
+        <Stack.Screen name="Result" component={ResultScreen} options={{ title: '결과 화면' }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
