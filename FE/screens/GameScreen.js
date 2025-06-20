@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
-export default function GameScreen({ route }) {
+export default function GameScreen({ route, navigation }) {
   const { question, optionA, optionB } = route.params;
 
   const optionA_ = optionA || '선택지 A';
@@ -25,18 +25,21 @@ export default function GameScreen({ route }) {
 
   const handleSelect = async (option) => {
     try {
-      await soundRef.current?.replayAsync();  // 효과음 재생
-      Haptics.selectionAsync();               // 진동 피드백
+      await soundRef.current?.replayAsync();
+      Haptics.selectionAsync();
     } catch (err) {
       console.warn("사운드/진동 실패:", err);
     }
 
-    Alert.alert("🟩 선택됨", `당신의 선택: ${option}`);
+    navigation.navigate('Result', {
+      selectedOption: option,
+      question: question_
+    });
   };
 
   return (
     <ImageBackground
-      source={require('../assets/bg.png')}
+      source={require('../assets/Game.png')}
       resizeMode="cover"
       style={styles.container}
     >
@@ -55,12 +58,11 @@ export default function GameScreen({ route }) {
   );
 }
 
-// ... styles 그대로 유지
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',       // 화면 전체 너비
+    height: '100%',      // 화면 전체 높이
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20

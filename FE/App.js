@@ -7,6 +7,7 @@ import AppLoading from 'expo-app-loading';
 
 import HomeScreen from './screens/HomeScreen';
 import GameScreen from './screens/GameScreen';
+import ResultScreen from './screens/ResultScreen';
 
 const Stack = createNativeStackNavigator();
 

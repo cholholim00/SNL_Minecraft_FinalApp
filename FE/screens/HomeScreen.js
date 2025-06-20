@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleGenerate = async () => {
     try {
-      const res = await fetch('http://192.168.100.166:5000/generate', {
+      const res = await fetch('http://192.168.219.133:5000/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keywords })
