@@ -2,11 +2,13 @@ from flask import Flask, request, make_response
 from flask_cors import CORS
 from gpt_service import generate_scenario
 from submit_handler import handle_submit
+from results_handler import register_results_route  # ✅ 함수로 수정
 import json
 
 app = Flask(__name__)
 CORS(app)
 
+#1. /scenario 질문 생성 API
 @app.route("/scenario", methods=["POST"])
 def scenario():
     data = request.get_json()
@@ -22,9 +24,8 @@ def scenario():
             {"Content-Type": "application/json; charset=utf-8"}
         )
 
-    rounds = 5
     result = []
-    for _ in range(rounds):
+    for _ in range(5):
         output = generate_scenario(gender, age_group, relationship, tone)
         if isinstance(output, str) and output.startswith("Error"):
             return make_response(
@@ -45,11 +46,8 @@ def scenario():
         {"Content-Type": "application/json; charset=utf-8"}
     )
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
 
-
-
+#2. /submit 선택 저장 API
 @app.route("/submit", methods=["POST"])
 def submit_choice():
     data = request.get_json()
@@ -59,3 +57,12 @@ def submit_choice():
         result.get("status", 500),
         {"Content-Type": "application/json; charset=utf-8"}
     )
+
+
+#3. /results 통계 조회 API 등록
+register_results_route(app)
+
+
+#4. 서버 실행
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
