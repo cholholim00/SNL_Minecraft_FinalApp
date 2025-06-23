@@ -1,4 +1,4 @@
 flask
 flask-cors
-openai        # GPT 호출 시 필요 (사용할 경우)
-dotenv
+openai
+python-dotenv

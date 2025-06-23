@@ -1,35 +1,61 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, make_response
 from flask_cors import CORS
-from gpt_service import generate_balance_question
+from gpt_service import generate_scenario
+from submit_handler import handle_submit
+import json
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=["GET"])
-def health_check():
-    return jsonify({"status": "ok"}), 200
-
-@app.route("/generate", methods=["POST"])
-def generate():
+@app.route("/scenario", methods=["POST"])
+def scenario():
     data = request.get_json()
-    if not data or "keywords" not in data:
-        return jsonify({"error": "Missing 'keywords' in request body"}), 400
+    gender = data.get("gender")
+    age_group = data.get("age_group")
+    relationship = data.get("relationship")
+    tone = data.get("tone")
 
-    raw_keywords = data["keywords"]
+    if not all([gender, age_group, relationship, tone]):
+        return make_response(
+            json.dumps({"error": "모든 항목(gender, age_group, relationship, tone)은 필수입니다."}, ensure_ascii=False),
+            400,
+            {"Content-Type": "application/json; charset=utf-8"}
+        )
 
-    # 문자열 → 리스트 변환 (예: "바다, 산" → ["바다", "산"])
-    keywords = [k.strip() for k in raw_keywords.split(",") if k.strip()]
-    if not keywords:
-        return jsonify({"error": "빈 키워드는 허용되지 않습니다."}), 400
+    rounds = 5
+    result = []
+    for _ in range(rounds):
+        output = generate_scenario(gender, age_group, relationship, tone)
+        if isinstance(output, str) and output.startswith("Error"):
+            return make_response(
+                json.dumps({"error": output}, ensure_ascii=False),
+                500,
+                {"Content-Type": "application/json; charset=utf-8"}
+            )
+        scenario, choiceA, choiceB = output
+        result.append({
+            "scenario": scenario,
+            "choiceA": choiceA,
+            "choiceB": choiceB
+        })
 
-    try:
-        question = generate_balance_question(keywords)
-        if question.startswith("Error:"):
-            return jsonify({"error": question}), 500
-        return jsonify({"question": question}), 200
-    except Exception as e:
-        print("🔥 서버 내부 에러:", str(e))
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+    return make_response(
+        json.dumps({"rounds": result}, ensure_ascii=False),
+        200,
+        {"Content-Type": "application/json; charset=utf-8"}
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+
+@app.route("/submit", methods=["POST"])
+def submit_choice():
+    data = request.get_json()
+    result = handle_submit(data)
+    return make_response(
+        json.dumps(result, ensure_ascii=False),
+        result.get("status", 500),
+        {"Content-Type": "application/json; charset=utf-8"}
+    )
