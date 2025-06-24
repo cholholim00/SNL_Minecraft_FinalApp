@@ -1,16 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
+const TOTAL_ROUNDS = 5;
+
 export default function GameScreen({ route, navigation }) {
-  const { question, optionA, optionB } = route.params;
-
-  const optionA_ = optionA || '선택지 A';
-  const optionB_ = optionB || '선택지 B';
-  const question_ = question || '질문이 없습니다.';
-
+  const { questions } = route.params; // questions: Array<{question, optionA, optionB}>
+  const [round, setRound] = useState(0);
+  const [answers, setAnswers] = useState([]);
   const soundRef = useRef(null);
+
+  const current = questions[round] || {};
+  const optionA_ = current.optionA || '선택지 A';
+  const optionB_ = current.optionB || '선택지 B';
+  const question_ = current.question || `ROUND ${round + 1}`;
 
   useEffect(() => {
     const loadSound = async () => {
@@ -28,29 +32,26 @@ export default function GameScreen({ route, navigation }) {
       await soundRef.current?.replayAsync();
       Haptics.selectionAsync();
     } catch (err) {
-      console.warn("사운드/진동 실패:", err);
+      console.warn('사운드/진동 실패:', err);
     }
 
-    navigation.navigate('Result', {
-      selectedOption: option,
-      question: question_
-    });
+    const newAnswers = [...answers, { round: round + 1, question: question_, selected: option }];
+    if (round + 1 < TOTAL_ROUNDS) {
+      setAnswers(newAnswers);
+      setRound(round + 1);
+    } else {
+      navigation.navigate('Result', { answers: newAnswers });
+    }
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/Game.png')}
-      resizeMode="cover"
-      style={styles.container}
-    >
-      <Text style={styles.question} numberOfLines={3} adjustsFontSizeToFit>
-        {question_}
-      </Text>
+    <ImageBackground source={require('../assets/Game.png')} resizeMode="cover" style={styles.container}>
+      <Text style={styles.roundText}>ROUND {round + 1} / {TOTAL_ROUNDS}</Text>
+      <Text style={styles.question}>{question_}</Text>
 
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionA_)}>
         <Text style={styles.choiceText}>{optionA_}</Text>
       </TouchableOpacity>
-
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionB_)}>
         <Text style={styles.choiceText}>{optionB_}</Text>
       </TouchableOpacity>
@@ -59,13 +60,12 @@ export default function GameScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',       // 화면 전체 너비
-    height: '100%',      // 화면 전체 높이
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  roundText: {
+    fontSize: 16,
+    color: '#ccc',
+    fontFamily: 'Minecraft',
+    marginBottom: 10
   },
   question: {
     fontFamily: 'Minecraft',

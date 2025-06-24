@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleGenerate = async () => {
     try {
-      const res = await fetch('http://192.168.219.133:5000/generate', {
+      const res = await fetch('http://192.168.100.184:5000/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keywords })
@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={require('../assets/bg.png')}
+      source={require('../assets/logo.png')}
       resizeMode="cover"
      style={styles.background} // 여기 주목
     >
