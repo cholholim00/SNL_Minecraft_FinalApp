@@ -2,9 +2,9 @@
 # request: 클라이언트 요청 처리
 # make_response: 응답 커스터마이징
 from flask import Flask, request, make_response
-from flask_cors import CORS  # CORS: 프론트엔드(React Native 등)에서 백엔드 API 호출 시 보안 정책 허용
+from flask_cors import CORS               # CORS: 프론트엔드(React Native 등)에서 백엔드 API 호출 시 보안 정책 허용
 from gpt_service import generate_scenario # GPT 기반 밸런스 질문 생성 함수
-from submit_handler import handle_submit # 사용자 선택 저장 핸들러
+from submit_handler import handle_submit  # 사용자 선택 저장 핸들러
 from results_handler import register_results_route, register_results_all_route # 결과 통계 API 등록 함수 (모듈화된 라우트 등록)
 import json # JSON 처리 모듈
 
