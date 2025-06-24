@@ -1,59 +1,80 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
-const TOTAL_ROUNDS = 5;
-
 export default function GameScreen({ route, navigation }) {
-  const { questions } = route.params; // questions: Array<{question, optionA, optionB}>
+  const { gender, age, situation } = route.params;
   const [round, setRound] = useState(0);
-  const [answers, setAnswers] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const soundRef = useRef(null);
 
-  const current = questions[round] || {};
-  const optionA_ = current.optionA || '선택지 A';
-  const optionB_ = current.optionB || '선택지 B';
-  const question_ = current.question || `ROUND ${round + 1}`;
-
+  // 효과음 로딩
   useEffect(() => {
     const loadSound = async () => {
       const { sound } = await Audio.Sound.createAsync(require('../assets/click.mp3'));
       soundRef.current = sound;
     };
     loadSound();
-    return () => {
-      if (soundRef.current) soundRef.current.unloadAsync();
+    return () => { soundRef.current?.unloadAsync(); };
+  }, []);
+
+  // 질문 받아오기
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch('http://192.168.100.184:5000/generate_batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gender, age, situation })
+        });
+        const data = await res.json();
+        setQuestions(data.questions);
+      } catch (err) {
+        console.error("질문 로딩 실패:", err);
+      } finally {
+        setLoading(false);
+      }
     };
+    fetchQuestions();
   }, []);
 
   const handleSelect = async (option) => {
     try {
       await soundRef.current?.replayAsync();
       Haptics.selectionAsync();
-    } catch (err) {
-      console.warn('사운드/진동 실패:', err);
-    }
+    } catch {}
 
-    const newAnswers = [...answers, { round: round + 1, question: question_, selected: option }];
-    if (round + 1 < TOTAL_ROUNDS) {
-      setAnswers(newAnswers);
+    const newSelections = [...selectedOptions, option];
+    setSelectedOptions(newSelections);
+
+    if (round < 4) {
       setRound(round + 1);
     } else {
-      navigation.navigate('Result', { answers: newAnswers });
+      navigation.navigate('Result', {
+        results: newSelections,
+        allQuestions: questions
+      });
     }
   };
 
-  return (
-    <ImageBackground source={require('../assets/Game.png')} resizeMode="cover" style={styles.container}>
-      <Text style={styles.roundText}>ROUND {round + 1} / {TOTAL_ROUNDS}</Text>
-      <Text style={styles.question}>{question_}</Text>
+  if (loading) {
+    return <ActivityIndicator size="large" color="#4CAF50" style={{ flex: 1 }} />;
+  }
 
-      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionA_)}>
-        <Text style={styles.choiceText}>{optionA_}</Text>
+  const { question, optionA, optionB } = questions[round] || {};
+
+  return (
+    <ImageBackground source={require('../assets/Game.png')} style={styles.container} resizeMode="cover">
+      <Text style={styles.round}>ROUND {round + 1} / 5</Text>
+      <Text style={styles.question}>{question}</Text>
+      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionA)}>
+        <Text style={styles.choiceText}>{optionA}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionB_)}>
-        <Text style={styles.choiceText}>{optionB_}</Text>
+      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionB)}>
+        <Text style={styles.choiceText}>{optionB}</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -61,10 +82,10 @@ export default function GameScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  roundText: {
-    fontSize: 16,
-    color: '#ccc',
+  round: {
     fontFamily: 'Minecraft',
+    fontSize: 18,
+    color: '#fff',
     marginBottom: 10
   },
   question: {

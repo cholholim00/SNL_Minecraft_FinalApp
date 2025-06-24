@@ -1,106 +1,105 @@
+// screens/SituationInputScreen.js
+
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 
-export default function SituationScreen({ route, navigation }) {
+export default function SituationInputScreen({ navigation, route }) {
   const { gender, age } = route.params;
 
   const [relation, setRelation] = useState(null);
-  const [tone, setTone] = useState(null);
+  const [mood, setMood] = useState(null);
 
   const handleNext = () => {
-    if (!relation || !tone) return;
-
-    // 이후 GameScreen으로 이동하면서 모든 선택값 전달
-    navigation.navigate('Game', {
-      gender,
-      age,
-      relation,
-      tone
-    });
+    if (relation && mood) {
+      navigation.navigate('GameScreen', {
+        gender,
+        age,
+        relation,
+        mood
+      });
+    }
   };
 
   return (
     <ImageBackground
-      source={require('../assets/logo.png')}
+      source={require('../assets/situation.png')}
       style={styles.container}
       resizeMode="cover"
     >
+      <Text style={styles.title}>관계를 선택하세요</Text>
+      <View style={styles.options}>
+        {['친구', '연인', '가족', '직장동료'].map(item => (
+          <TouchableOpacity
+            key={item}
+            style={[styles.button, relation === item && styles.selected]}
+            onPress={() => setRelation(item)}
+          >
+            <Text style={styles.text}>{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <Text style={styles.title}>상황을 선택하세요</Text>
-
-      <Text style={styles.subTitle}>관계</Text>
-      <View style={styles.row}>
-        {['친구', '연인', '가족', '직장동료'].map(rel => (
+      <View style={styles.options}>
+        {['웃긴', '어이없는', '슬픈', '애매한'].map(item => (
           <TouchableOpacity
-            key={rel}
-            style={[styles.choice, relation === rel && styles.selected]}
-            onPress={() => setRelation(rel)}
+            key={item}
+            style={[styles.button, mood === item && styles.selected]}
+            onPress={() => setMood(item)}
           >
-            <Text style={styles.text}>{rel}</Text>
+            <Text style={styles.text}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <Text style={styles.subTitle}>분위기</Text>
-      <View style={styles.row}>
-        {['웃긴', '애매한', '슬픈', '어이없는'].map(t => (
-          <TouchableOpacity
-            key={t}
-            style={[styles.choice, tone === t && styles.selected]}
-            onPress={() => setTone(t)}
-          >
-            <Text style={styles.text}>{t}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <TouchableOpacity
-        style={[styles.nextButton, !(relation && tone) && { opacity: 0.4 }]}
-        onPress={handleNext}
-        disabled={!(relation && tone)}
-      >
-        <Text style={styles.text}>🎮 밸런스 질문 받기</Text>
-      </TouchableOpacity>
+      {relation && mood && (
+        <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+          <Text style={styles.nextText}>다음</Text>
+        </TouchableOpacity>
+      )}
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  container: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
   title: {
     fontFamily: 'Minecraft',
     fontSize: 22,
     color: '#fff',
-    marginBottom: 20,
-    textAlign: 'center'
+    marginVertical: 12
   },
-  subTitle: {
-    fontFamily: 'Minecraft',
-    fontSize: 18,
-    color: '#fff',
-    marginTop: 10,
-    marginBottom: 8
+  options: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 16
   },
-  row: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 12 },
-  choice: {
-    backgroundColor: '#eee',
+  button: {
+    backgroundColor: '#33691E',
     padding: 10,
-    margin: 5,
-    borderWidth: 2,
-    borderColor: '#333',
-    borderRadius: 8
+    margin: 6,
+    borderRadius: 8,
+    minWidth: 80,
+    alignItems: 'center'
   },
-  selected: { backgroundColor: '#4CAF50' },
+  selected: {
+    backgroundColor: '#689F38'
+  },
   text: {
     fontFamily: 'Minecraft',
     fontSize: 16,
-    color: '#000'
+    color: '#fff'
   },
-  nextButton: {
-    marginTop: 20,
-    backgroundColor: '#689F38',
+  nextBtn: {
+    backgroundColor: '#4CAF50',
     padding: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#33691E'
+    borderRadius: 8,
+    marginTop: 20
+  },
+  nextText: {
+    fontFamily: 'Minecraft',
+    fontSize: 18,
+    color: '#fff'
   }
 });

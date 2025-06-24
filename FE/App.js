@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import IntroScreen from './screens/IntroScreen';  // ✅ 새로 추가
-import SelectScreen from './screens/SelectScreen';
+import InfoInputScreen from './screens/InfoInputScreen'; // 정보 입력 화면
 import SituationScreen from './screens/SituationScreen'; // 다음에 만들 화면
 import HomeScreen from './screens/HomeScreen';
 import GameScreen from './screens/GameScreen';
@@ -20,7 +20,7 @@ export default function App() {
     <Stack.Navigator initialRouteName="Intro">
   <Stack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
   <Stack.Screen name="Home" component={HomeScreen} options={{ title: '홈' }} />
-  <Stack.Screen name="Select" component={SelectScreen} options={{ title: '정보 입력' }} />
+  <Stack.Screen name="InfoInput" component={InfoInputScreen} options={{ title: '정보 입력' }} />
   <Stack.Screen name="Situation" component={SituationScreen} options={{ title: '상황 선택' }} />
   <Stack.Screen name="Game" component={GameScreen} options={{ title: '게임 시작' }} />
   <Stack.Screen name="Result" component={ResultScreen} options={{ title: '결과' }} />
