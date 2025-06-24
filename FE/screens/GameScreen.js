@@ -1,21 +1,45 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { Audio } from 'expo-av';
+import * as Haptics from 'expo-haptics';
 
-export default function GameScreen({ route }) {
+export default function GameScreen({ route, navigation }) {
   const { question, optionA, optionB } = route.params;
 
-  // optionA/B가 없을 경우 기본 텍스트로 대체
   const optionA_ = optionA || '선택지 A';
   const optionB_ = optionB || '선택지 B';
   const question_ = question || '질문이 없습니다.';
 
-  const handleSelect = (option) => {
-    Alert.alert("🟩 선택됨", `당신의 선택: ${option}`);
+  const soundRef = useRef(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      const { sound } = await Audio.Sound.createAsync(require('../assets/click.mp3'));
+      soundRef.current = sound;
+    };
+    loadSound();
+    return () => {
+      if (soundRef.current) soundRef.current.unloadAsync();
+    };
+  }, []);
+
+  const handleSelect = async (option) => {
+    try {
+      await soundRef.current?.replayAsync();
+      Haptics.selectionAsync();
+    } catch (err) {
+      console.warn("사운드/진동 실패:", err);
+    }
+
+    navigation.navigate('Result', {
+      selectedOption: option,
+      question: question_
+    });
   };
 
   return (
     <ImageBackground
-      source={require('../assets/bg.png')}
+      source={require('../assets/Game.png')}
       resizeMode="cover"
       style={styles.container}
     >
@@ -37,6 +61,8 @@ export default function GameScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',       // 화면 전체 너비
+    height: '100%',      // 화면 전체 높이
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20

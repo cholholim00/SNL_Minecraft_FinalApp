@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleGenerate = async () => {
     try {
-      const res = await fetch('http://192.168.100.166:5000/generate', {
+      const res = await fetch('http://192.168.219.133:5000/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keywords })
@@ -37,8 +37,9 @@ export default function HomeScreen({ navigation }) {
       resizeMode="cover"
      style={styles.background} // 여기 주목
     >
+      <text style={styles.title}>S.N.L = Seriously Nonsense League  - 쓸모없음의 끝에서 만나는 진지함</text>
       <View style={styles.innerContainer}> {/* padding은 여기에 */}
-      <Text style={styles.title}>🎮 AI 밸런스 생성기</Text>
+      <Text style={styles.title}>🎮 내 인생에 왜 이런 게 필요하지? 월드컵</Text>
       <TextInput
         value={keywords}
         onChangeText={setKeywords}

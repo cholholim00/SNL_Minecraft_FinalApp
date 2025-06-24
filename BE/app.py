@@ -2,7 +2,7 @@ from flask import Flask, request, make_response
 from flask_cors import CORS
 from gpt_service import generate_scenario
 from submit_handler import handle_submit
-from results_handler import register_results_route  # ✅ 함수로 수정
+from results_handler import register_results_route
 import json
 
 app = Flask(__name__)
@@ -47,7 +47,7 @@ def scenario():
     )
 
 
-#2. /submit 선택 저장 API
+# 2. /submit 선택 저장 API
 @app.route("/submit", methods=["POST"])
 def submit_choice():
     data = request.get_json()
@@ -59,10 +59,9 @@ def submit_choice():
     )
 
 
-#3. /results 통계 조회 API 등록
-register_results_route(app)
+# 3. /results 통계 조회 API 등록
+register_results_route(app) 
 
-
-#4. 서버 실행
+# 4. 서버 실행
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
