@@ -16,6 +16,10 @@ export default function InfoInputScreen({ navigation }) {
       source={require('../assets/info_input_bg.png')} // 픽셀 아트 배경
       style={styles.container}
       resizeMode="cover"
+      width={'100%'}
+      height={'100%'}
+      imageStyle={{ opacity: 0.8 }} // 배경 이미지 투명도 조절
+      
     >
       <Text style={styles.title}>🎮 당신을 선택해주세요!</Text>
 

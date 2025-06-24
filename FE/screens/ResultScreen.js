@@ -7,7 +7,7 @@ export default function ResultScreen({ route, navigation }) {
 
   return (
     <ImageBackground
-      source={require('../assets/Result.png')}
+      source={require('../assets/logo.png')}
       resizeMode="cover"
       style={styles.container}
     >

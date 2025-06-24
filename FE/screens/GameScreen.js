@@ -11,27 +11,34 @@ export default function GameScreen({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const soundRef = useRef(null);
 
-  // 효과음 로딩
   useEffect(() => {
     const loadSound = async () => {
-      const { sound } = await Audio.Sound.createAsync(require('../assets/click.mp3'));
+      const { sound } = await Audio.Sound.createAsync(
+        require('../assets/click.mp3')
+      );
       soundRef.current = sound;
     };
     loadSound();
-    return () => { soundRef.current?.unloadAsync(); };
+    return () => {
+      soundRef.current?.unloadAsync();
+    };
   }, []);
 
-  // 질문 받아오기
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await fetch('http://192.168.100.184:5000/generate_batch', {
+        const res = await fetch('http://10.0.2.2:5000/scenario', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ gender, age, situation })
+          body: JSON.stringify({
+            gender,
+            age_group: age,
+            relationship: situation,
+            tone: '웃긴'
+          })
         });
         const data = await res.json();
-        setQuestions(data.questions);
+        setQuestions(data.rounds);
       } catch (err) {
         console.error("질문 로딩 실패:", err);
       } finally {
@@ -64,17 +71,17 @@ export default function GameScreen({ route, navigation }) {
     return <ActivityIndicator size="large" color="#4CAF50" style={{ flex: 1 }} />;
   }
 
-  const { question, optionA, optionB } = questions[round] || {};
+  const { scenario, choiceA, choiceB } = questions[round] || {};
 
   return (
     <ImageBackground source={require('../assets/Game.png')} style={styles.container} resizeMode="cover">
       <Text style={styles.round}>ROUND {round + 1} / 5</Text>
-      <Text style={styles.question}>{question}</Text>
-      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionA)}>
-        <Text style={styles.choiceText}>{optionA}</Text>
+      <Text style={styles.question}>{scenario}</Text>
+      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceA)}>
+        <Text style={styles.choiceText}>{choiceA}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(optionB)}>
-        <Text style={styles.choiceText}>{optionB}</Text>
+      <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceB)}>
+        <Text style={styles.choiceText}>{choiceB}</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

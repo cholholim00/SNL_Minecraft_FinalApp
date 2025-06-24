@@ -11,7 +11,7 @@ export default function SituationInputScreen({ navigation, route }) {
 
   const handleNext = () => {
     if (relation && mood) {
-      navigation.navigate('GameScreen', {
+      navigation.navigate('Game', {
         gender,
         age,
         relation,
@@ -22,7 +22,7 @@ export default function SituationInputScreen({ navigation, route }) {
 
   return (
     <ImageBackground
-      source={require('../assets/situation.png')}
+      source={require('../assets/logo.png')}
       style={styles.container}
       resizeMode="cover"
     >
