@@ -1,10 +1,11 @@
-from openai import OpenAI
-from dotenv import load_dotenv
+from openai import OpenAI # OpenAI 공식 Python SDK (v1+) 
+from dotenv import load_dotenv # .env 파일에서 환경변수 (예: OPENAI_API_KEY) 로드
 import os
 
-load_dotenv()
-client = OpenAI()
+load_dotenv()     # .env 파일의 환경 변수 로딩 (.env 내부: OPENAI_API_KEY=sk-...)
+client = OpenAI() # OpenAI 클라이언트 인스턴스 생성 (API 키 자동 로드)
 
+#1️ 프롬프트 생성 함수
 def create_prompt(gender: str, age_group: str, relationship: str, tone: str) -> str:
     return (
         f"{age_group} {gender}인 사용자를 위한 밸런스 게임 질문을 만들어줘.\n"
@@ -15,6 +16,7 @@ def create_prompt(gender: str, age_group: str, relationship: str, tone: str) -> 
         f"상황: ...\nA: ...\nB: ..."
     )
 
+# 응답 파싱 함수
 def parse_response(raw: str):
     lines = raw.split("\n")
     scenario = ""
@@ -29,6 +31,7 @@ def parse_response(raw: str):
             choiceB = line.replace("B:", "").strip()
     return scenario, choiceA, choiceB
 
+# 전체 시나리오 생성 함수
 def generate_scenario(gender: str, age_group: str, relationship: str, tone: str):
     prompt = create_prompt(gender, age_group, relationship, tone)
     try:
