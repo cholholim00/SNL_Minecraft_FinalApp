@@ -6,6 +6,7 @@ from flask_cors import CORS               # CORS: 프론트엔드(React Native �
 from gpt_service import generate_scenario # GPT 기반 밸런스 질문 생성 함수
 from submit_handler import handle_submit  # 사용자 선택 저장 핸들러
 from results_handler import register_results_route, register_results_all_route # 결과 통계 API 등록 함수 (모듈화된 라우트 등록)
+from personality_handler import register_personality_route
 import json # JSON 처리 모듈
 
 
@@ -74,11 +75,13 @@ def submit_choice():
         {"Content-Type": "application/json; charset=utf-8"}
     )
 
+# 3. /analyze 성격 분석 및 이미지 생성 API
+register_personality_route(app)
 
-# 3. /results 통계 조회 API 등록
+# 4. /results 통계 조회 API 등록
 register_results_route(app)     # 특정 질문 통계 조회 
 register_results_all_route(app) # 전체 질문 통계 목록 조회
 
-# 4. 서버 실행
+# 서버 실행
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

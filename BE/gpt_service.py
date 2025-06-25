@@ -34,24 +34,24 @@ def parse_response(raw: str):
 # 전체 시나리오 생성 함수
 def generate_scenario(gender: str, age_group: str, relationship: str, tone: str):
     prompt = create_prompt(gender, age_group, relationship, tone)
-    print("🔸 생성된 프롬프트:")
-    print(prompt)  # ✅ 프롬프트 확인
+    print("생성된 프롬프트:")
+    print(prompt)  # 프롬프트 확인
 
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "너는 상황극 기반 밸런스 게임 질문 생성기야."},
+                {"role": "system", "content": "너는 상황극 기반 밸런스 게임 질문 생성 AI야."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=150,
             temperature=0.9
         )
         content = response.choices[0].message.content.strip()
-        print("✅ GPT 응답 결과:")
-        print(content)  # ✅ 응답 확인
+        print("GPT 응답 결과:")
+        print(content)  # 응답 확인
         return parse_response(content)
     except Exception as e:
-        print("❌ GPT 호출 에러:", str(e))
+        print("GPT 호출 에러:", str(e))
         return f"Error: {str(e)}"
 
