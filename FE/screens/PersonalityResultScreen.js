@@ -23,7 +23,7 @@ export default function PersonalityResultScreen({ route, navigation }) {
   useEffect(() => {
     const fetchPersonality = async () => {
       try {
-        const res = await fetch('http://192.168.100.184:5000/api/personality', {
+        const res = await fetch('http://192.168.100.184:5000/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

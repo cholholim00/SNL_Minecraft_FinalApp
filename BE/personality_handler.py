@@ -4,7 +4,7 @@ from flask import request, make_response
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# .env 파일에서 API 키 로드
+# 환경 변수 로딩 및 OpenAI 클라이언트 초기화
 load_dotenv()
 client = OpenAI()
 
@@ -21,7 +21,7 @@ def register_personality_route(app):
                 {"Content-Type": "application/json; charset=utf-8"}
             )
 
-        # Step 1: GPT로 성격 분석 프롬프트
+        # GPT 프롬프트 생성
         prompt = (
             f"사용자가 밸런스 게임에서 선택한 결과는 {answers}입니다.\n"
             f"A는 도전적이고 자기 주장 강한 선택지, B는 신중하고 배려 깊은 선택지입니다.\n"
@@ -30,7 +30,7 @@ def register_personality_route(app):
         )
 
         try:
-            # GPT 호출
+            # Step 1: GPT를 통한 성격 분석
             chat_response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -41,7 +41,7 @@ def register_personality_route(app):
             )
             content = chat_response.choices[0].message.content.strip()
 
-            # 응답 파싱
+            # GPT 응답 파싱
             title = ""
             description = ""
             for line in content.split("\n"):
@@ -54,16 +54,16 @@ def register_personality_route(app):
                 title = "성격 분석 결과"
                 description = content  # fallback
 
-            # Step 2: 이미지 생성
-            image_prompt = f"{description}인 사람을 나타내는 일러스트 캐릭터, 귀엽고 감정이 잘 표현된 아바타 스타일"
+            # Step 2: 이미지 생성 (DALL·E 사용)
+            image_prompt = f"{description}인 사람을 묘사한 일러스트 캐릭터, 귀엽고 감정이 풍부한 얼굴, 아바타 스타일, 흰 배경"
             image_response = client.images.generate(
                 model="dall-e-3",
                 prompt=image_prompt,
-                size="512x512",
+                size="1024x1024",
                 quality="standard",
                 n=1
             )
-            image_url = image_response.data[0].url
+            image_url = image_response.data[0].url  # 이미지 URL 추출
 
             # 최종 응답
             return make_response(
@@ -77,8 +77,10 @@ def register_personality_route(app):
             )
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return make_response(
-                json.dumps({"error": str(e)}, ensure_ascii=False),
+                json.dumps({"error": f"서버 오류: {str(e)}"}, ensure_ascii=False),
                 500,
                 {"Content-Type": "application/json; charset=utf-8"}
             )
