@@ -85,7 +85,7 @@ export default function PersonalityResultScreen({ route, navigation }) {
 
         <Animatable.View animation="fadeInUp" delay={600} style={styles.textBox}>
           <Text style={styles.resultTitle}>알고보면 난....?</Text> 
-          <Text>{result.title} 이잖아!!</Text>
+          {/* <Text>{result.title} 이잖아!!</Text> */}
           <Text style={styles.description}>{result.description}</Text>
         </Animatable.View>
 

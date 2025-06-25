@@ -74,7 +74,11 @@ export default function SituationInputScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%'
+     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1B1B1B',
+    width: '100%',
+    height: '100%'
   },
   scroll: {
     alignItems: 'center',

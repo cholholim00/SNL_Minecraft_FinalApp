@@ -81,7 +81,7 @@ export default function GameScreen({ route, navigation }) {
   const { scenario, choiceA, choiceB } = questions[round] || {};
 
   return (
-    <ImageBackground source={require('../assets/background_17.png')} style={styles.container} resizeMode="contain">
+    <ImageBackground source={require('../assets/Game1.png')} style={styles.container} resizeMode="contain">
       <Text style={styles.round}>ROUND {round + 1} / 5</Text>
       <Text style={styles.question}>{scenario}</Text>
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceA)}>
@@ -96,7 +96,7 @@ export default function GameScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' },
   round: {
     fontFamily: 'Minecraft',
     fontSize: 18,
