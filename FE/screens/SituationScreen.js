@@ -32,7 +32,7 @@ export default function SituationInputScreen({ navigation, route }) {
     <ImageBackground
       source={require('../assets/Situation.png')}
       style={styles.container}
-      resizeMode="cover"
+      resizeMode="contain"
     >
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>관계를 선택하세요</Text>

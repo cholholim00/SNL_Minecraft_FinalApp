@@ -81,7 +81,7 @@ export default function GameScreen({ route, navigation }) {
   const { scenario, choiceA, choiceB } = questions[round] || {};
 
   return (
-    <ImageBackground source={require('../assets/background_17.png')} style={styles.container} resizeMode="cover">
+    <ImageBackground source={require('../assets/background_17.png')} style={styles.container} resizeMode="contain">
       <Text style={styles.round}>ROUND {round + 1} / 5</Text>
       <Text style={styles.question}>{scenario}</Text>
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceA)}>

@@ -18,7 +18,7 @@ export default function ResultScreen({ route, navigation }) {
   return (
     <ImageBackground
       source={require('../assets/logo.png')}
-      resizeMode="cover"
+      resizeMode="contain"
       style={styles.container}
     >
       <Animatable.Text animation="zoomInDown" style={styles.title}>

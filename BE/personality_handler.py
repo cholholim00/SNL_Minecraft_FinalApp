@@ -23,10 +23,12 @@ def register_personality_route(app):
 
         # GPT 프롬프트 생성
         prompt = (
-            f"사용자가 밸런스 게임에서 선택한 결과는 {answers}입니다.\n"
-            f"A는 도전적이고 자기 주장 강한 선택지, B는 신중하고 배려 깊은 선택지입니다.\n"
-            f"이 사람의 성격을 한 문장으로 분석해주고, 그 성격 유형의 간단한 제목도 붙여줘.\n"
-            f"형식: 제목: ...\n설명: ..."
+            f"사용자가 밸런스 게임에서 총 5문제 중 선택한 답은 다음과 같아: {answers}\n"
+            f"선택지는 A 또는 B로만 구성되어 있습니다. A가 항상 도전적인 선택이고, B가 항상 신중한 선택은 아닙니다.\n"
+            f"하지만 선택 경향성(예: A를 많이 선택함)은 그 사람의 성향을 어느 정도 반영할 수 있습니다.\n"
+            f"이 데이터를 기반으로, 사용자의 성향을 조심스럽게 유추하여 다음과 같은 형식으로 알려주세요:\n"
+            f"- 제목: (예시: 모험을 즐기는 자유인)\n"
+            f"- 설명: 한두 문장으로 이 사람의 성격을 설명해주세요."
         )
 
         try:
@@ -37,7 +39,7 @@ def register_personality_route(app):
                     {"role": "system", "content": "너는 사람의 선택을 기반으로 성격을 분석하는 전문가야."},
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=200
+                max_tokens=300
             )
             content = chat_response.choices[0].message.content.strip()
 
@@ -55,11 +57,16 @@ def register_personality_route(app):
                 description = content  # fallback
 
             # Step 2: 이미지 생성 (DALL·E 사용)
-            image_prompt = f"{description}인 사람을 묘사한 일러스트 캐릭터, 귀엽고 감정이 풍부한 얼굴, 아바타 스타일, 흰 배경"
+            image_prompt = (
+                f"A pixel art avatar character that visually represents a personality type described as: '{description}'. "
+                f"The character should be expressive and stylized, similar to MBTI cartoon avatars. "
+                f"Use vibrant colors, defined facial features, and a charming 8-bit or 16-bit art style. "
+                f"The character should be standing with a simple background and reflect the described personality."
+            )
             image_response = client.images.generate(
                 model="dall-e-3",
                 prompt=image_prompt,
-                size="1024x1024",
+                size="1024x1792",
                 quality="standard",
                 n=1
             )

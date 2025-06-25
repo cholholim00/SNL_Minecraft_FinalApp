@@ -26,7 +26,7 @@ export default function InfoInputScreen({ navigation }) {
     <ImageBackground
       source={require('../assets/info_input_bg.png')}
       style={styles.container}
-      resizeMode="cover"
+      resizeMode="contain"
       imageStyle={{ opacity: 0.8 }}
     >
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -34,7 +34,7 @@ export default function InfoInputScreen({ navigation }) {
           <Text style={styles.title}>🎮 당신을 선택해주세요!</Text>
 
           <View style={styles.section}>
-            <Text style={styles.subtitle}>성별</Text>
+            <Text style={styles.subtitle}>당신의 성별은?</Text>
             <View style={styles.row}>
               <TouchableOpacity onPress={() => setGender('남')}>
                 <Image
@@ -58,7 +58,7 @@ export default function InfoInputScreen({ navigation }) {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.subtitle}>연령대</Text>
+            <Text style={styles.subtitle}>당신의 나이대를 선택해주세요</Text>
             <View style={styles.row}>
               {['10대', '20~30대', '40~50대'].map((a) => (
                 <TouchableOpacity
