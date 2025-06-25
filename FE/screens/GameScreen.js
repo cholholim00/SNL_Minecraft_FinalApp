@@ -27,7 +27,7 @@ export default function GameScreen({ route, navigation }) {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await fetch('http://192.168.100.164:5000/scenario', {
+        const res = await fetch('http://192.168.100.184:5000/scenario', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -50,23 +50,29 @@ export default function GameScreen({ route, navigation }) {
   }, []);
 
   const handleSelect = async (option) => {
-    try {
-      await soundRef.current?.replayAsync();
-      Haptics.selectionAsync();
-    } catch {}
+  try {
+    await soundRef.current?.replayAsync();
+    Haptics.selectionAsync();
+  } catch {}
 
-    const newSelections = [...selectedOptions, option];
-    setSelectedOptions(newSelections);
-
-    if (round < 4) {
-      setRound(round + 1);
-    } else {
-      navigation.navigate('Result', {
-        results: newSelections,
-        allQuestions: questions
-      });
-    }
+  // 질문과 선택을 같이 저장
+  const selected = {
+    question: questions[round]?.scenario || `질문 ${round + 1}`,
+    selected: option
   };
+
+  const newSelections = [...selectedOptions, selected];
+  setSelectedOptions(newSelections);
+
+  if (round < 4) {
+    setRound(round + 1);
+  } else {
+    navigation.navigate('Result', {
+      answers: newSelections // ✅ ResultScreen에서 사용할 이름에 맞춤
+    });
+  }
+};
+
 
   if (loading) {
     return <ActivityIndicator size="large" color="#4CAF50" style={{ flex: 1 }} />;
@@ -81,6 +87,7 @@ export default function GameScreen({ route, navigation }) {
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceA)}>
         <Text style={styles.choiceText}>{choiceA}</Text>
       </TouchableOpacity>
+      <Text style={styles.round}>OR</Text>
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceB)}>
         <Text style={styles.choiceText}>{choiceB}</Text>
       </TouchableOpacity>

@@ -1,6 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ImageBackground,
+  Dimensions
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
+
+const { width, height } = Dimensions.get('window');
 
 export default function ResultScreen({ route, navigation }) {
   const { answers } = route.params;
@@ -29,56 +39,72 @@ export default function ResultScreen({ route, navigation }) {
         ))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Intro')}>
         <Text style={styles.buttonText}>처음으로 돌아가기</Text>
       </TouchableOpacity>
+      
+      <TouchableOpacity
+  style={styles.button}
+  onPress={() => navigation.navigate('PersonalityResult', { answers })}
+>
+  <Text style={styles.buttonText}>성격 결과 보기</Text>
+</TouchableOpacity>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    paddingHorizontal: width * 0.05,
+    paddingTop: height * 0.07,
+    paddingBottom: height * 0.03
+  },
   title: {
     fontFamily: 'Minecraft',
-    fontSize: 24,
+    fontSize: width * 0.06,
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: height * 0.03,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: height * 0.1,
     alignItems: 'center'
   },
   resultBox: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 10,
-    padding: 16,
-    marginVertical: 8,
+    padding: width * 0.04,
+    marginVertical: 6,
     width: '100%',
     borderColor: '#4CAF50',
     borderWidth: 2
   },
   question: {
     fontFamily: 'Minecraft',
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: '#fff',
-    marginBottom: 8
+    marginBottom: 6
   },
   answer: {
     fontFamily: 'Minecraft',
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: '#FFC107'
   },
   button: {
-    marginTop: 20,
     alignSelf: 'center',
     backgroundColor: '#689F38',
-    padding: 12,
-    borderRadius: 6
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.1,
+    borderRadius: 10,
+    marginTop: height * 0.02
   },
   buttonText: {
     fontFamily: 'Minecraft',
-    fontSize: 16,
+    fontSize: width * 0.045,
     color: '#fff'
   }
 });
