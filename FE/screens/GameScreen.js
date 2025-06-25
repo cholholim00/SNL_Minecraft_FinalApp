@@ -4,7 +4,7 @@ import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
 export default function GameScreen({ route, navigation }) {
-  const { gender, age, situation } = route.params;
+  const { gender, age, relationship, tone } = route.params;
   const [round, setRound] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -27,17 +27,18 @@ export default function GameScreen({ route, navigation }) {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await fetch('http://10.0.2.2:5000/scenario', {
+        const res = await fetch('http://192.168.100.164:5000/scenario', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             gender,
             age_group: age,
-            relationship: situation,
-            tone: '웃긴'
+            relationship,
+            tone
           })
         });
         const data = await res.json();
+        console.log("질문 데이터:", data);
         setQuestions(data.rounds);
       } catch (err) {
         console.error("질문 로딩 실패:", err);
