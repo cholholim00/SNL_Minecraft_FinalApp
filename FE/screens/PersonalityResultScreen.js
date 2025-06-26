@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  ImageBackground,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
@@ -25,9 +24,7 @@ export default function PersonalityResultScreen({ route, navigation }) {
       try {
         const res = await fetch('http://192.168.100.184:5000/analyze', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ answers })
         });
 
@@ -65,14 +62,10 @@ export default function PersonalityResultScreen({ route, navigation }) {
   }
 
   return (
-    <ImageBackground
-      source={require('../assets/logo.png')}
-      resizeMode="contain"
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
         <Animatable.Text animation="fadeInDown" style={styles.title}>
-              당신의 성격 유형은 무엇일까요?
+          당신의 성격 유형은 무엇일까요?
         </Animatable.Text>
 
         <Animatable.Image
@@ -84,8 +77,7 @@ export default function PersonalityResultScreen({ route, navigation }) {
         />
 
         <Animatable.View animation="fadeInUp" delay={600} style={styles.textBox}>
-          <Text style={styles.resultTitle}>알고보면 난....?</Text> 
-          {/* <Text>{result.title} 이잖아!!</Text> */}
+          <Text style={styles.resultTitle}>알고보면 난....?</Text>
           <Text style={styles.description}>{result.description}</Text>
         </Animatable.View>
 
@@ -96,13 +88,14 @@ export default function PersonalityResultScreen({ route, navigation }) {
           <Text style={styles.buttonText}>다시 시작하기</Text>
         </TouchableOpacity>
       </ScrollView>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1B1B1B',
     paddingHorizontal: width * 0.06,
     paddingTop: height * 0.08
   },
@@ -113,7 +106,8 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.02,
     textShadowColor: '#000',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2
+    textShadowRadius: 2,
+    textAlign: 'center'
   },
   image: {
     width: width * 0.7,
@@ -121,10 +115,17 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.03
   },
   textBox: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    borderRadius: 15,
+    backgroundColor: '#222',
+    borderRadius: 12,
     padding: width * 0.05,
-    marginBottom: height * 0.04
+    marginBottom: height * 0.04,
+    borderColor: '#4CAF50',
+    borderWidth: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5
   },
   resultTitle: {
     fontFamily: 'Minecraft',

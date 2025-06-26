@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  Image,
   Dimensions
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -17,20 +18,27 @@ export default function ResultScreen({ route, navigation }) {
 
   return (
     <ImageBackground
-      source={require('../assets/logo.png')}
-      resizeMode="contain"
+      source={require('../assets/Home.png')} // 🎨 적절한 배경 이미지 사용
+      resizeMode="cover"
       style={styles.container}
     >
-      <Animatable.Text animation="zoomInDown" style={styles.title}>
-        당신의 선택 결과
-      </Animatable.Text>
+      {/* 🎯 로고 + 타이틀 */}
+      <Animatable.View animation="zoomInDown" style={styles.titleRow}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logoIcon}
+          resizeMode="contain"
+        />
+        <Text style={styles.titleText}>당신의 선택 결과</Text>
+      </Animatable.View>
 
+      {/* ✅ 스크롤 가능한 결과 목록 */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {answers.map((ans, index) => (
           <Animatable.View
             key={index}
             animation="fadeInUp"
-            delay={index * 200}
+            delay={index * 150}
             style={styles.resultBox}
           >
             <Text style={styles.question}>{`Q${index + 1}. ${ans.question}`}</Text>
@@ -39,16 +47,17 @@ export default function ResultScreen({ route, navigation }) {
         ))}
       </ScrollView>
 
+      {/* ✅ 버튼들 */}
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Intro')}>
         <Text style={styles.buttonText}>처음으로 돌아가기</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity
-  style={styles.button}
-  onPress={() => navigation.navigate('PersonalityResult', { answers })}
->
-  <Text style={styles.buttonText}>성격 결과 보기</Text>
-</TouchableOpacity>
+        style={styles.button}
+        onPress={() => navigation.navigate('PersonalityResult', { answers })}
+      >
+        <Text style={styles.buttonText}>성격 결과 보기</Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 }
@@ -56,22 +65,32 @@ export default function ResultScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.07,
+    paddingHorizontal: width * 0.04,
+    paddingTop: height * 0.06,
     paddingBottom: height * 0.03
   },
-  title: {
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: height * 0.03
+  },
+  logoIcon: {
+    width: width * 0.10,
+    height: width * 0.10,
+    marginRight: 10
+  },
+  titleText: {
     fontFamily: 'Minecraft',
     fontSize: width * 0.06,
     color: '#fff',
     textAlign: 'center',
-    marginBottom: height * 0.03,
     textShadowColor: '#000',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2
   },
   scrollContent: {
-    paddingBottom: height * 0.1,
+    paddingBottom: height * 0.08,
     alignItems: 'center'
   },
   resultBox: {
@@ -100,7 +119,7 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.015,
     paddingHorizontal: width * 0.1,
     borderRadius: 10,
-    marginTop: height * 0.02
+    marginTop: height * 0.015
   },
   buttonText: {
     fontFamily: 'Minecraft',
