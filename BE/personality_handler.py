@@ -68,7 +68,7 @@ def register_personality_route(app):
             image_response = client.images.generate(
                 model="dall-e-3",
                 prompt=image_prompt,
-                size="1024x1024",  # ⚠️ 유효한 사이즈
+                size="1024x72",  # ⚠️ 유효한 사이즈
                 quality="standard",
                 n=1
             )
