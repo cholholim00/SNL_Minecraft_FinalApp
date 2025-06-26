@@ -65,7 +65,6 @@ def register_personality_route(app):
                 f"The background should be plain and the style should match Minecraft or 8-bit/16-bit pixel character art. "
                 f"The image should resemble a personality profile icon."
             )
-
             image_response = client.images.generate(
                 model="dall-e-3",
                 prompt=image_prompt,
