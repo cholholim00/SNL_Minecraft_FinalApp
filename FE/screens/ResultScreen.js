@@ -56,7 +56,7 @@ export default function ResultScreen({ route, navigation }) {
         style={styles.button}
         onPress={() => navigation.navigate('PersonalityResult', { answers })}
       >
-        <Text style={styles.buttonText}>성격 결과 보기</Text>
+        <Text style={styles.buttonText}>성격 결과 보기가기</Text>
       </TouchableOpacity>
     </ImageBackground>
   );

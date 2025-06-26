@@ -89,7 +89,7 @@ export default function GameScreen({ route, navigation }) {
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceA)}>
         <Text style={styles.choiceText}>{choiceA}</Text>
       </TouchableOpacity>
-      <Text style={styles.round}>OR</Text>
+      <Text style={styles.round}>VS</Text>
       <TouchableOpacity style={styles.choice} onPress={() => handleSelect(choiceB)}>
         <Text style={styles.choiceText}>{choiceB}</Text>
       </TouchableOpacity>
