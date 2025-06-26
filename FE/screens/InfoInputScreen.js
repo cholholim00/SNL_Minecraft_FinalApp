@@ -3,18 +3,17 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   TouchableOpacity,
+  ImageBackground,
   Image,
-  Dimensions,
-  ScrollView
+  ScrollView,
+  useWindowDimensions
 } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
 
 export default function InfoInputScreen({ navigation }) {
   const [gender, setGender] = useState(null);
   const [age, setAge] = useState(null);
+  const { width, height } = useWindowDimensions();
 
   const handleNext = () => {
     if (gender && age) {
@@ -26,58 +25,92 @@ export default function InfoInputScreen({ navigation }) {
     <ImageBackground
       source={require('../assets/info_input_bg.png')}
       style={styles.container}
-      resizeMode="cover"
-      imageStyle={{ opacity: 0.8 }}
+      resizeMode="contain"
     >
-      <ScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.inner}> {/* ✅ inner View로 wrap */}
-          <Text style={styles.title}>🎮 당신을 선택해주세요!</Text>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: height * 0.03,
+          paddingHorizontal: width * 0.04
+        }}
+      >
+        <View style={{ width: '100%', maxWidth: 460, alignItems: 'center' }}>
+          {/* 🎮 타이틀 */}
+          <Text style={[styles.title, { fontSize: width * 0.04 }]}>
+            🎮 당신을 선택해주세요!
+          </Text>
 
+          {/* 👦👧 성별 선택 */}
           <View style={styles.section}>
-            <Text style={styles.subtitle}>성별</Text>
+            <Text style={[styles.subtitle, { fontSize: width * 0.028 }]}>
+              당신의 성별은?
+            </Text>
             <View style={styles.row}>
-              <TouchableOpacity onPress={() => setGender('남')}>
-                <Image
-                  source={require('../assets/boy_pixel.png')}
-                  style={[
-                    styles.character,
-                    gender === '남' && styles.selected
-                  ]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setGender('여')}>
-                <Image
-                  source={require('../assets/girl_pixel.png')}
-                  style={[
-                    styles.character,
-                    gender === '여' && styles.selected
-                  ]}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.subtitle}>연령대</Text>
-            <View style={styles.row}>
-              {['10대', '20~30대', '40~50대'].map((a) => (
-                <TouchableOpacity
-                  key={a}
-                  style={[
-                    styles.ageBox,
-                    age === a && styles.selectedBox
-                  ]}
-                  onPress={() => setAge(a)}
-                >
-                  <Text style={styles.ageText}>{a}</Text>
+              {[{ label: '남', image: require('../assets/boy_pixel.png') },
+                { label: '여', image: require('../assets/girl_pixel.png') }].map((item) => (
+                <TouchableOpacity key={item.label} onPress={() => setGender(item.label)}>
+                  <Image
+                    source={item.image}
+                    style={{
+                      width: width * 0.2,
+                      height: width * 0.2,
+                      marginHorizontal: 8,
+                      borderWidth: 2,
+                      borderRadius: 6,
+                      borderColor: gender === item.label ? '#FFEB3B' : 'transparent'
+                    }}
+                    resizeMode="contain"
+                  />
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
+          {/* 📊 나이 선택 */}
+          <View style={styles.section}>
+            <Text style={[styles.subtitle, { fontSize: width * 0.028 }]}>
+              당신의 나이대를 선택해주세요
+            </Text>
+            <View style={[styles.row, { flexWrap: 'wrap' }]}>
+              {['10대', '20~30대', '40~50대'].map((a) => (
+                <TouchableOpacity
+                  key={a}
+                  onPress={() => setAge(a)}
+                  style={{
+                    backgroundColor: age === a ? '#689F38' : '#33691E',
+                    paddingVertical: height * 0.01,
+                    paddingHorizontal: width * 0.05,
+                    borderRadius: 6,
+                    margin: 4
+                  }}
+                >
+                  <Text style={[styles.ageText, { fontSize: width * 0.025 }]}>
+                    {a}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* ✅ 다음 버튼 */}
           {gender && age && (
-            <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-              <Text style={styles.nextText}>👉 다음으로</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#4CAF50',
+                paddingVertical: height * 0.015,
+                paddingHorizontal: width * 0.08,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#33691E',
+                marginTop: height * 0.015
+              }}
+              onPress={handleNext}
+            >
+              <Text style={[styles.buttonText, { fontSize: width * 0.028 }]}>
+                👉 다음으로
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -88,77 +121,39 @@ export default function InfoInputScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%'
-  },
-  scroll: {
-    paddingVertical: 40,
-    paddingHorizontal: 20
-  },
-  inner: {
-    minHeight: height * 0.9, // ✅ 스크롤에 최소 높이 보장
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 1
   },
   title: {
     fontFamily: 'Minecraft',
-    fontSize: 22,
     color: '#fff',
-    marginBottom: 30,
+    textAlign: 'center',
+    marginBottom: 16,
     textShadowColor: '#000',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 2,
-    textAlign: 'center'
-  },
-  section: {
-    marginBottom: 30,
-    alignItems: 'center'
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2
   },
   subtitle: {
     fontFamily: 'Minecraft',
-    fontSize: 16,
     color: '#fff',
-    marginBottom: 12
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  section: {
+    marginBottom: 24,
+    alignItems: 'center'
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  character: {
-    width: width * 0.25,
-    height: width * 0.25,
-    marginHorizontal: 10,
-    borderWidth: 3,
-    borderColor: 'transparent'
-  },
-  selected: {
-    borderColor: '#FFEB3B'
-  },
-  ageBox: {
-    backgroundColor: '#33691E',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginHorizontal: 6,
-    borderRadius: 6
-  },
-  selectedBox: {
-    backgroundColor: '#689F38'
-  },
   ageText: {
     fontFamily: 'Minecraft',
-    fontSize: 14,
-    color: '#fff'
+    color: '#fff',
+    textAlign: 'center'
   },
-  nextBtn: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-    marginTop: 10
-  },
-  nextText: {
+  buttonText: {
     fontFamily: 'Minecraft',
-    fontSize: 16,
-    color: '#fff'
+    color: '#fff',
+    textAlign: 'center'
   }
 });

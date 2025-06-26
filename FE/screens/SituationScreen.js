@@ -32,7 +32,7 @@ export default function SituationInputScreen({ navigation, route }) {
     <ImageBackground
       source={require('../assets/Situation.png')}
       style={styles.container}
-      resizeMode="cover"
+      resizeMode="contain"
     >
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>관계를 선택하세요</Text>
@@ -74,7 +74,11 @@ export default function SituationInputScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%'
+     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1B1B1B',
+    width: '100%',
+    height: '100%'
   },
   scroll: {
     alignItems: 'center',

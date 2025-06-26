@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 export default function HomeScreen({ navigation }) {
   return (
    <ImageBackground
-  source={require('../assets/background_4.png')}
+  source={require('../assets/Home.png')}
   style={{
     flex: 1,
     width: '100%',
@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
     justifyContent: 'center',
     alignItems: 'center'
   }}
-  resizeMode="cover"  // 또는 'contain'
+  resizeMode="contain"  // 또는 'contain'
 >
   <Text style={styles.title}>AI 밸런스 게임</Text>
   <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate('InfoInput')}>
@@ -44,17 +44,20 @@ const styles = StyleSheet.create({
   title: {
     fontSize: Platform.OS === 'web' ? 36 : 28,
     fontFamily: 'Minecraft',
-    color: '#fff',
-    marginBottom: height * 0.05,
+   textShadowColor: '#fff',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 2,
+    marginBottom: height * 0.03,
     textAlign: 'center'
   },
   startButton: {
     backgroundColor: '#4CAF50',
     paddingVertical: height * 0.02,
-    paddingHorizontal: width * 0.1,
+    paddingHorizontal: width * 0.10,
     borderRadius: 10,
     borderWidth: 3,
-    borderColor: '#33691E'
+    borderColor: '#33691E',
+    marginBottom: height * 0.25,
   },
   startText: {
     fontSize: Platform.OS === 'web' ? 20 : 18,

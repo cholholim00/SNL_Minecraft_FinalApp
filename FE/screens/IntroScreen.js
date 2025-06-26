@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   leftButton: {
     position: 'absolute',
     bottom: height * 0.11,
-    left: width * 0.25,
+    left: width * 0.20,
     width: width * 0.32,
     height: height * 0.05,
     justifyContent: 'center',

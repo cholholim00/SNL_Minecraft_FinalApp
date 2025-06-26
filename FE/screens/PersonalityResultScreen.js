@@ -67,12 +67,12 @@ export default function PersonalityResultScreen({ route, navigation }) {
   return (
     <ImageBackground
       source={require('../assets/logo.png')}
-      resizeMode="cover"
+      resizeMode="contain"
       style={styles.container}
     >
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
         <Animatable.Text animation="fadeInDown" style={styles.title}>
-          당신의 성격 유형은?
+              당신의 성격 유형은 무엇일까요?
         </Animatable.Text>
 
         <Animatable.Image
@@ -84,7 +84,8 @@ export default function PersonalityResultScreen({ route, navigation }) {
         />
 
         <Animatable.View animation="fadeInUp" delay={600} style={styles.textBox}>
-          <Text style={styles.resultTitle}>{result.title}</Text>
+          <Text style={styles.resultTitle}>알고보면 난....?</Text> 
+          {/* <Text>{result.title} 이잖아!!</Text> */}
           <Text style={styles.description}>{result.description}</Text>
         </Animatable.View>
 
