@@ -59,17 +59,17 @@ def register_personality_route(app):
                 description = content  # fallback
 
             # Step 2: 이미지 생성 (DALL·E 사용)
+            
             image_prompt = (
-                f"A pixel art avatar character that visually represents a personality type described as: '{description}'. "
-                f"The character should be expressive and stylized, similar to MBTI cartoon avatars. "
-                f"Use vibrant colors, defined facial features, and a charming 8-bit or 16-bit art style. "
-                f"The character should be standing with a simple background and reflect the described personality."
+                f"'{description}' 성격을 시각적으로 표현한 캐릭터를 만들어줘.  "
+                f"이 캐릭터의 성별은 중립적이어야 하며, 얼굴 표정과 의상을 통해 성격이 잘 드러나야 해"
+                f"캐릭터의 모습이 상반신까지만 나오고 배경색은 흰색으로 해. 글은 포함하지 마."
             )
             
             image_response = client.images.generate(
                 model="dall-e-3",
                 prompt=image_prompt,
-                size="1024x1792",
+                size="1792x1024",
                 quality="standard",
                 n=1
             )
