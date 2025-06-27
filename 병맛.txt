@@ -1,0 +1,9 @@
+네이티브
+프론트
+cd OneDrive\문서\GitHub\SNL_Minecraft_FinalApp
+cd FE
+npx expo start
+
+백엔드
+cd BE
+python app.py
